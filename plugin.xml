@@ -29,7 +29,7 @@
     <preference name="FACEBOOK_BROWSER_SDK_VERSION" default="v11.0" />
 
     <engines>
-        <engine name="cordova-android" version=">=9.0.0" />
+        <engine name="cordova-android" version=">=8.0.0" />
         <engine name="cordova-ios" version=">=6.0.0" />
     </engines>
 
@@ -216,7 +216,7 @@
             <access origin="https://*.fbcdn.net" />
             <access origin="https://*.akamaihd.net" />
         </config-file>
-        
+
         <hook type="after_prepare" src="scripts/browser/after_prepare.js" />
     </platform>
 </plugin>
