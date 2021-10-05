@@ -330,18 +330,6 @@ public class ConnectPlugin extends CordovaPlugin {
             executeSetAdvertiserIDCollectionEnabled(args, callbackContext);
             return true;
 
-        } else if(action.equals("setDataProcessingOptions")) {
-            executeSetDataProcessingOptions(args, callbackContext);
-            return true;
-
-        } else if (action.equals("setUserData")) {
-            executeSetUserData(args, callbackContext);
-            return true;
-
-        } else if (action.equals("clearUserData")) {
-            executeClearUserData(args, callbackContext);
-            return true;
-
         } else if (action.equals("logEvent")) {
             executeLogEvent(args, callbackContext);
             return true;
@@ -623,65 +611,6 @@ public class ConnectPlugin extends CordovaPlugin {
         callbackContext.success();
     }
 
-    private void executeSetDataProcessingOptions(JSONArray args, CallbackContext callbackContext) throws JSONException {
-        if (args.length() == 0) {
-            // Not enough parameters
-            callbackContext.error("Invalid arguments");
-            return;
-        }
-
-        JSONArray arr = args.getJSONArray(0);
-        String[] options = new String[arr.length()];
-        for (int i = 0; i < arr.length(); i++) {
-            options[i + 1] = arr.getString(i);
-        }
-
-        if (args.length() == 1) {
-            FacebookSdk.setDataProcessingOptions(options);
-        } else {
-            String country = args.getString(1);
-            String state = args.getString(2);
-            FacebookSdk.setDataProcessingOptions(options);
-        }
-        callbackContext.success();
-    }
-
-    private void executeSetUserData(JSONArray args, CallbackContext callbackContext) throws JSONException {
-        if (args.length() == 0) {
-            // Not enough parameters
-            callbackContext.error("Invalid arguments");
-            return;
-        }
-
-        Map<String, String> params = new HashMap<String, String>();
-        JSONObject parameters;
-
-        try {
-            parameters = args.getJSONObject(0);
-        } catch (JSONException e) {
-            callbackContext.error("userData must be an object");
-            return;
-        }
-
-        Iterator<String> iter = parameters.keys();
-        while (iter.hasNext()) {
-            String key = iter.next();
-            try {
-                params.put(key, parameters.getString(key));
-            } catch (JSONException e) {
-                Log.w(TAG, "Non-string parameter provided to setUserData discarded");
-            }
-        }
-
-        logger.setUserData(params.get("em"), params.get("fn"), params.get("ln"), params.get("ph"), params.get("db"), params.get("ge"), params.get("ct"), params.get("st"), params.get("zp"), params.get("cn"));
-        callbackContext.success();
-    }
-
-    private void executeClearUserData(JSONArray args, CallbackContext callbackContext) {
-        logger.clearUserData();
-        callbackContext.success();
-    }
-
     private void executeLogEvent(JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (args.length() == 0) {
             // Not enough parameters
@@ -866,7 +795,7 @@ public class ConnectPlugin extends CordovaPlugin {
         } else {
             try {
                 byte[] photoImageData = Base64.decode(paramBundle.get("photo_image"), Base64.DEFAULT);
-                Bitmap image = BitmapFactory.decodeByteArray(photoImageData, 0, photoImageData.length); 
+                Bitmap image = BitmapFactory.decodeByteArray(photoImageData, 0, photoImageData.length);
                 photoBuilder.setBitmap(image).setUserGenerated(true);
             } catch (Exception e) {
                 Log.d(TAG, "photo_image cannot be decoded");
@@ -1059,7 +988,7 @@ public class ConnectPlugin extends CordovaPlugin {
         }
         return new JSONObject();
     }
-    
+
     public JSONObject getProfile() {
         String response;
         final Profile profile = Profile.getCurrentProfile();
