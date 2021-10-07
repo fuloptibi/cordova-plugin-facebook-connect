@@ -32,6 +32,7 @@
     <engines>
         <engine name="cordova-android" version=">=8.0.0" />
         <engine name="cordova-ios" version=">=6.0.0" />
+        <engine name="cordova" version=">=3.0.0"/>
     </engines>
 
     <!-- android -->
@@ -182,10 +183,21 @@
 
         <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
           <array>
-            <string>fbapi</string>
-            <string>fb-messenger-api</string>
-            <string>fbauth2</string>
-            <string>fbshareextension</string>
+              <string>fbapi</string>
+              <string>fbapi20130214</string>
+              <string>fbapi20130410</string>
+              <string>fbapi20130702</string>
+              <string>fbapi20131010</string>
+              <string>fbapi20131219</string>
+              <string>fbapi20140410</string>
+              <string>fbapi20140116</string>
+              <string>fbapi20150313</string>
+              <string>fbapi20150629</string>
+              <string>fbapi20160328</string>
+              <string>fbauth</string>
+              <string>fb-messenger-share-api</string>
+              <string>fbauth2</string>
+              <string>fbshareextension</string>
           </array>
         </config-file>
 
