@@ -20,14 +20,15 @@ module.exports = function (context) {
           return null
       }
   }
-  
+
   var getPreferenceValue = function (name) {
       var config = fs.readFileSync("config.xml").toString()
       var preferenceValue = getPreferenceValueFromConfig(config, name)
+      /*
       if(!preferenceValue) {
         var packageJson = fs.readFileSync("package.json").toString()
         preferenceValue = getPreferenceValueFromPackageJson(packageJson, name)
-      }
+      }*/
       return preferenceValue
   }
 
@@ -76,9 +77,9 @@ module.exports = function (context) {
   }
 
   var getPlistPath = function () {
-    var common = context.requireCordovaModule('cordova-common'), 
-    util = context.requireCordovaModule('cordova-lib/src/cordova/util'), 
-    projectName = new common.ConfigParser(util.projectConfig(util.isCordova())).name(), 
+    var common = context.requireCordovaModule('cordova-common'),
+    util = context.requireCordovaModule('cordova-lib/src/cordova/util'),
+    projectName = new common.ConfigParser(util.projectConfig(util.isCordova())).name(),
     plistPath = './platforms/ios/' + projectName + '/' + projectName + '-Info.plist'
     return plistPath
   }
