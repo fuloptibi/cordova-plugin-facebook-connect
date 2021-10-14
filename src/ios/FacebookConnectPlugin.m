@@ -17,12 +17,10 @@
 
 @property (strong, nonatomic) NSString* dialogCallbackId;
 @property (strong, nonatomic) FBSDKLoginManager *loginManager;
-@property (nonatomic, assign) FBSDKLoginTracking *loginTracking;
 @property (strong, nonatomic) NSString* gameRequestDialogCallbackId;
 @property (nonatomic, assign) BOOL applicationWasActivated;
 
 - (NSDictionary *)loginResponseObject;
-- (NSDictionary *)limitedLoginResponseObject;
 - (NSDictionary *)profileObject;
 - (void)enableHybridAppEvents;
 @end
@@ -310,7 +308,6 @@
         if (self.loginManager == nil) {
             self.loginManager = [[FBSDKLoginManager alloc] init];
         }
-        self.loginTracking = FBSDKLoginTrackingEnabled;
         [self.loginManager logInWithPermissions:permissions fromViewController:[self topMostController] handler:loginHandler];
         return;
     }
@@ -371,7 +368,6 @@
     if (self.loginManager == nil) {
         self.loginManager = [[FBSDKLoginManager alloc] init];
     }
-    self.loginTracking = FBSDKLoginTrackingEnabled;
 
     FBSDKLoginManagerLoginResultBlock reauthorizeHandler = ^void(FBSDKLoginManagerLoginResult *result, NSError *error) {
         if (error) {
@@ -399,9 +395,6 @@
         // Close the session and clear the cache
         if (self.loginManager == nil) {
             self.loginManager = [[FBSDKLoginManager alloc] init];
-        }
-        if (self.loginTracking == nil) {
-            self.loginTracking = FBSDKLoginTrackingEnabled;
         }
 
         [self.loginManager logOut];
@@ -689,18 +682,10 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
-- (void) returnLimitedLoginMethodError:(NSString *)callbackId {
-    NSString *methodErrorMessage = @"Method not available when using Limited Login";
-    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                     messageAsString:methodErrorMessage];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-}
-
 - (void) loginWithPermissions:(NSArray *)permissions withHandler:(FBSDKLoginManagerLoginResultBlock) handler {
     if (self.loginManager == nil) {
         self.loginManager = [[FBSDKLoginManager alloc] init];
     }
-    self.loginTracking = FBSDKLoginTrackingEnabled;
 
     [self.loginManager logInWithPermissions:permissions fromViewController:[self topMostController] handler:handler];
 }
@@ -744,29 +729,6 @@
                                   @"userID" : token.userID ? token.userID : @""
                                   };
 
-
-    return [response copy];
-}
-
-- (NSDictionary *)limitedLoginResponseObject {
-    if (![FBSDKAuthenticationToken currentAuthenticationToken]) {
-        return @{@"status": @"unknown"};
-    }
-
-    NSMutableDictionary *response = [[NSMutableDictionary alloc] init];
-    FBSDKAuthenticationToken *token = [FBSDKAuthenticationToken currentAuthenticationToken];
-
-    NSString *userID;
-    if ([FBSDKProfile currentProfile]) {
-        userID = [FBSDKProfile currentProfile].userID;
-    }
-
-    response[@"status"] = @"connected";
-    response[@"authResponse"] = @{
-                                  @"authenticationToken" : token.tokenString ? token.tokenString : @"",
-                                  @"nonce" : token.nonce ? token.nonce : @"",
-                                  @"userID" : userID ? userID : @""
-                                  };
 
     return [response copy];
 }
