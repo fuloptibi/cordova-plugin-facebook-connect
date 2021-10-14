@@ -114,11 +114,6 @@
 }
 
 - (void)getLoginStatus:(CDVInvokedUrlCommand *)command {
-    if (self.loginTracking == FBSDKLoginTrackingLimited) {
-        [self returnLimitedLoginMethodError:command.callbackId];
-        return;
-    }
-
     BOOL force = [[command argumentAtIndex:0] boolValue];
     if (force) {
         [FBSDKAccessToken refreshCurrentAccessToken:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
@@ -134,11 +129,6 @@
 }
 
 - (void)getAccessToken:(CDVInvokedUrlCommand *)command {
-    if (self.loginTracking == FBSDKLoginTrackingLimited) {
-        [self returnLimitedLoginMethodError:command.callbackId];
-        return;
-    }
-
     // Return access token if available
     CDVPluginResult *pluginResult;
     // Check if the session is open or not
@@ -317,7 +307,7 @@
             permissions = @[];
         }
 
-        if (self.loginManager == nil || self.loginTracking == FBSDKLoginTrackingLimited) {
+        if (self.loginManager == nil) {
             self.loginManager = [[FBSDKLoginManager alloc] init];
         }
         self.loginTracking = FBSDKLoginTrackingEnabled;
@@ -339,56 +329,8 @@
 
 }
 
-- (void)loginWithLimitedTracking:(CDVInvokedUrlCommand *)command {
-    if ([command.arguments count] == 1) {
-        NSString *nonceErrorMessage = @"No nonce specified";
-        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                         messageAsString:nonceErrorMessage];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-        return;
-    }
-
-    NSArray *permissions = [command argumentAtIndex:0];
-    NSArray *permissionsArray = @[];
-    NSString *nonce = [command argumentAtIndex:1];
-
-    if ([permissions count] > 0) {
-        permissionsArray = permissions;
-    }
-
-    FBSDKLoginManagerLoginResultBlock loginHandler = ^void(FBSDKLoginManagerLoginResult *result, NSError *error) {
-        if (error) {
-            // If the SDK has a message for the user, surface it.
-            NSString *errorCode = @"-2";
-            NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
-            [self returnLoginError:command.callbackId:errorCode:errorMessage];
-            return;
-        } else if (result.isCancelled) {
-            NSString *errorCode = @"4201";
-            NSString *errorMessage = @"User cancelled.";
-            [self returnLoginError:command.callbackId:errorCode:errorMessage];
-        } else {
-            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                          messageAsDictionary:[self limitedLoginResponseObject]];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-        }
-    };
-
-    if (self.loginManager == nil || self.loginTracking == FBSDKLoginTrackingEnabled) {
-        self.loginManager = [FBSDKLoginManager new];
-    }
-    self.loginTracking = FBSDKLoginTrackingLimited;
-    FBSDKLoginConfiguration *configuration = [[FBSDKLoginConfiguration alloc] initWithPermissions:permissionsArray tracking:FBSDKLoginTrackingLimited nonce:nonce];
-    [self.loginManager logInFromViewController:[self topMostController] configuration:configuration completion:loginHandler];
-}
-
 - (void) checkHasCorrectPermissions:(CDVInvokedUrlCommand*)command
 {
-    if (self.loginTracking == FBSDKLoginTrackingLimited) {
-        [self returnLimitedLoginMethodError:command.callbackId];
-        return;
-    }
-
     NSArray *permissions = nil;
 
     if ([command.arguments count] > 0) {
@@ -426,11 +368,6 @@
 }
 
 - (void) reauthorizeDataAccess:(CDVInvokedUrlCommand *)command {
-    if (self.loginTracking == FBSDKLoginTrackingLimited) {
-        [self returnLimitedLoginMethodError:command.callbackId];
-        return;
-    }
-
     if (self.loginManager == nil) {
         self.loginManager = [[FBSDKLoginManager alloc] init];
     }
@@ -617,11 +554,6 @@
 
 - (void) graphApi:(CDVInvokedUrlCommand *)command
 {
-    if (self.loginTracking == FBSDKLoginTrackingLimited) {
-        [self returnLimitedLoginMethodError:command.callbackId];
-        return;
-    }
-
     CDVPluginResult *pluginResult;
     if (! [FBSDKAccessToken currentAccessToken]) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
@@ -850,23 +782,11 @@
 
     response[@"userID"] = userID ? userID : @"";
 
-    if (self.loginTracking == FBSDKLoginTrackingLimited) {
-        NSString *name = profile.name;
-        NSString *email = profile.email;
+    NSString *firstName = profile.firstName;
+    NSString *lastName = profile.lastName;
 
-        if (name) {
-            response[@"name"] = name;
-        }
-        if (email) {
-            response[@"email"] = email;
-        }
-    } else {
-        NSString *firstName = profile.firstName;
-        NSString *lastName = profile.lastName;
-
-        response[@"firstName"] = firstName ? firstName : @"";
-        response[@"lastName"] = lastName ? lastName : @"";
-    }
+    response[@"firstName"] = firstName ? firstName : @"";
+    response[@"lastName"] = lastName ? lastName : @"";
 
     return [response copy];
 }
