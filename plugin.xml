@@ -120,6 +120,10 @@
             <string>$APP_ID</string>
         </config-file>
 
+        <config-file target="*-Info.plist" parent="FacebookClientToken">
+            <string>$APP_ID</string>
+        </config-file>
+
         <config-file target="*-Info.plist" parent="FacebookDisplayName">
             <string>$APP_NAME</string>
         </config-file>
@@ -147,7 +151,7 @@
             <dict>
               <key>CFBundleURLSchemes</key>
               <array>
-                <string>fb$APP_IDFACEBOOK_URL_SCHEME_SUFFIX_PLACEHOLDER</string>
+                <string>fb$APP_ID</string>
                 <!--
                 <string>OTHER_APP_SCHEMES_PLACEHOLDER</string>
               -->
@@ -188,7 +192,18 @@
         <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
           <array>
             <string>fbapi</string>
-            <string>fb-messenger-api</string>
+            <string>fbapi20130214</string>
+            <string>fbapi20130410</string>
+            <string>fbapi20130702</string>
+            <string>fbapi20131010</string>
+            <string>fbapi20131219</string>
+            <string>fbapi20140410</string>
+            <string>fbapi20140116</string>
+            <string>fbapi20150313</string>
+            <string>fbapi20150629</string>
+            <string>fbapi20160328</string>
+            <string>fbauth</string>
+            <string>fb-messenger-share-api</string>
             <string>fbauth2</string>
             <string>fbshareextension</string>
           </array>
