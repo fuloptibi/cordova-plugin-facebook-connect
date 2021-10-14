@@ -282,14 +282,13 @@
     [FBSDKAccessToken refreshCurrentAccessToken:nil];
 
     FBSDKLoginManagerLoginResultBlock loginHandler = ^void(FBSDKLoginManagerLoginResult *result, NSError *error) {
-        /*if (error) {
+        if (error) {
             // If the SDK has a message for the user, surface it.
             NSString *errorCode = @"-2";
             NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
             [self returnLoginError:command.callbackId:errorCode:errorMessage];
             return;
-        } else */
-        if (result.isCancelled) {
+        } else if (result.isCancelled) {
             NSString *errorCode = @"4201";
             NSString *errorMessage = @"User cancelled.";
             [self returnLoginError:command.callbackId:errorCode:errorMessage];
@@ -371,13 +370,12 @@
     }
 
     FBSDKLoginManagerLoginResultBlock reauthorizeHandler = ^void(FBSDKLoginManagerLoginResult *result, NSError *error) {
-        /*if (error) {
+        if (error) {
             NSString *errorCode = @"-2";
             NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
             [self returnLoginError:command.callbackId:errorCode:errorMessage];
             return;
-        } else*/
-        if (result.isCancelled) {
+        } else if (result.isCancelled) {
             NSString *errorCode = @"4201";
             NSString *errorMessage = @"User cancelled.";
             [self returnLoginError:command.callbackId:errorCode:errorMessage];
@@ -604,14 +602,13 @@
     }
 
     [self loginWithPermissions:requestPermissions withHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-        /*if (error) {
+        if (error) {
             // If the SDK has a message for the user, surface it.
             NSString *errorCode = @"-2";
             NSString *errorMessage = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
             [self returnLoginError:command.callbackId:errorCode:errorMessage];
             return;
-        } else */
-        if (result.isCancelled) {
+        } else if (result.isCancelled) {
             NSString *errorCode = @"4201";
             NSString *errorMessage = @"User cancelled.";
             [self returnLoginError:command.callbackId:errorCode:errorMessage];
