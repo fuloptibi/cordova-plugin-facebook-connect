@@ -26,8 +26,8 @@
     <preference name="FACEBOOK_HYBRID_APP_EVENTS" default="false" />
     <preference name="FACEBOOK_ADVERTISER_ID_COLLECTION" default="true" />
     <preference name="FACEBOOK_ANDROID_SDK_VERSION" default="6.5.1"/>
-    <preference name="FACEBOOK_IOS_SDK_VERSION" default="12.0.0"/>
-    <preference name="FACEBOOK_BROWSER_SDK_VERSION" default="v12.0.0" />
+    <preference name="FACEBOOK_IOS_SDK_VERSION" default="11.2.1"/>
+    <preference name="FACEBOOK_BROWSER_SDK_VERSION" default="v11.2.1" />
 
     <engines>
         <engine name="cordova-android" version=">=8.0.0" />
@@ -215,9 +215,9 @@
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="FBSDKCoreKit" spec="12.0.0"/>
-                <pod name="FBSDKLoginKit" spec="12.0.0"/>
-                <pod name="FBSDKShareKit" spec="12.0.0"/>
+                <pod name="FBSDKCoreKit" spec="11.2.1"/>
+                <pod name="FBSDKLoginKit" spec="11.2.1"/>
+                <pod name="FBSDKShareKit" spec="11.2.1"/>
             </pods>
         </podspec>
 
