@@ -170,6 +170,60 @@
     [self returnGenericSuccess:command.callbackId];
 }
 
+- (void)setDataProcessingOptions:(CDVInvokedUrlCommand *)command {
+    if ([command.arguments count] == 0) {
+        // Not enough arguments
+        [self returnInvalidArgsError:command.callbackId];
+        return;
+    }
+
+    NSArray *options = [command argumentAtIndex:0];
+    if ([command.arguments count] == 1) {
+        [FBSDKSettings setDataProcessingOptions:options];
+    } else {
+        NSString *country = [command.arguments objectAtIndex:1];
+        NSString *state = [command.arguments objectAtIndex:2];
+        [FBSDKSettings setDataProcessingOptions:options country:country state:state];
+    }
+    [self returnGenericSuccess:command.callbackId];
+}
+
+- (void)setUserData:(CDVInvokedUrlCommand *)command {
+    if ([command.arguments count] == 0) {
+        // Not enough arguments
+        [self returnInvalidArgsError:command.callbackId];
+        return;
+    }
+
+    [self.commandDelegate runInBackground:^{
+        NSDictionary *params = [command.arguments objectAtIndex:0];
+
+        if (![params isKindOfClass:[NSDictionary class]]) {
+            CDVPluginResult *res = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"userData must be an object"];
+            [self.commandDelegate sendPluginResult:res callbackId:command.callbackId];
+            return;
+        } else {
+            [FBSDKAppEvents setUserEmail:(NSString *)params[@"em"]
+                            firstName:(NSString*)params[@"fn"]
+                            lastName:(NSString *)params[@"ln"]
+                            phone:(NSString *)params[@"ph"]
+                            dateOfBirth:(NSString *)params[@"db"]
+                            gender:(NSString *)params[@"ge"]
+                            city:(NSString *)params[@"ct"]
+                            state:(NSString *)params[@"st"]
+                            zip:(NSString *)params[@"zp"]
+                            country:(NSString *)params[@"cn"]];
+        }
+
+        [self returnGenericSuccess:command.callbackId];
+    }];
+}
+
+- (void)clearUserData:(CDVInvokedUrlCommand *)command {
+    [FBSDKAppEvents clearUserData];
+    [self returnGenericSuccess:command.callbackId];
+}
+
 - (void)logEvent:(CDVInvokedUrlCommand *)command {
     if ([command.arguments count] == 0) {
         // Not enough arguments

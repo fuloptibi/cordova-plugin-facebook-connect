@@ -22,13 +22,17 @@ module.exports = function (context) {
   }
 
   var getPreferenceValue = function (name) {
+      console.log('------------------------------------------------\n'+name);
       var config = fs.readFileSync("config.xml").toString()
       var preferenceValue = getPreferenceValueFromConfig(config, name)
-      /*
       if(!preferenceValue) {
-        var packageJson = fs.readFileSync("package.json").toString()
-        preferenceValue = getPreferenceValueFromPackageJson(packageJson, name)
-      }*/
+        try {
+          var packageJson = fs.readFileSync("package.json").toString()
+          preferenceValue = getPreferenceValueFromPackageJson(packageJson, name)
+        } catch (e) {
+        }
+      }
+      console.log(preferenceValue);
       return preferenceValue
   }
 
