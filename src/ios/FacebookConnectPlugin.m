@@ -309,6 +309,7 @@
         if (self.loginManager == nil) {
             self.loginManager = [[FBSDKLoginManager alloc] init];
         }
+        [self.loginManager logOut];
         [self.loginManager logInWithPermissions:permissions fromViewController:[self topMostController] handler:loginHandler];
         return;
     }
@@ -690,6 +691,7 @@
         self.loginManager = [[FBSDKLoginManager alloc] init];
     }
 
+    [self.loginManager logOut];
     [self.loginManager logInWithPermissions:permissions fromViewController:[self topMostController] handler:handler];
 }
 
