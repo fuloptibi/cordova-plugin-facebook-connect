@@ -596,6 +596,7 @@ public class ConnectPlugin extends CordovaPlugin {
 
         cordova.setActivityResultCallback(this);
         LoginManager loginManager = LoginManager.getInstance();
+        loginManager.logOut();
         loginManager.logIn(cordova.getActivity(), permissions);
     }
 
@@ -719,6 +720,7 @@ public class ConnectPlugin extends CordovaPlugin {
 
         // Set up the activity result callback to this class
         cordova.setActivityResultCallback(this);
+        LoginManager.getInstance().logOut();
         LoginManager.getInstance().logIn(cordova.getActivity(), permissions);
     }
 
